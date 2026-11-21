@@ -1,0 +1,51 @@
+{
+  "name": "boat_simulator",
+
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".",
+    "target": "devcontainer"
+  },
+
+  "remoteUser": "ros",
+  "updateRemoteUserUID": true,
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/boat_simulator,type=bind",
+  "workspaceFolder": "/workspaces/boat_simulator",
+
+  "runArgs": [
+    "--network=host",
+    "--ipc=host"
+    // GPU on a native Linux host: , "--device=/dev/dri"
+    // GPU under WSL2/WSLg:        , "--device=/dev/dxg"
+  ],
+
+  "containerEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}",
+    "ROS_DOMAIN_ID": "42"
+    // WSLg also needs: WAYLAND_DISPLAY, XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir, LD_LIBRARY_PATH=/usr/lib/wsl/lib
+  },
+
+  "mounts": [
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
+    "source=boat-sim-bashhistory,target=/home/ros/commandhistory,type=volume"
+    // WSLg also needs: source=/mnt/wslg,target=/mnt/wslg,type=bind and source=/usr/lib/wsl,target=/usr/lib/wsl,type=bind
+  ],
+
+  "postCreateCommand": "rosdep update --rosdistro lyrical",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-iot.vscode-ros",
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "ms-python.python",
+        "redhat.vscode-xml"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "ros.distro": "lyrical"
+      }
+    }
+  }
+}
