@@ -133,9 +133,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ENV DEBIAN_FRONTEND=
 
-# Copy configuration files (e.g., .vimrc) from config/ to the container's home directory
-COPY --chown=${USERNAME}:${USERNAME} config ${HOME}
-
 # # Uncomment this section to install additional apt packages
 # ENV DEBIAN_FRONTEND=noninteractive
 # RUN apt-get update \
